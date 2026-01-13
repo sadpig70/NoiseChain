@@ -1,324 +1,301 @@
-# NoiseChain 기술 명세서
+# NoiseChain Specification
 
-**문서 버전**: 1.0  
-**작성일**: 2026-01-13  
-**상태**: 승인됨 (Approved)  
-**프로젝트**: NoiseChain
+**Version**: 1.0  
+**Date**: 2026-01-13  
+**Status**: Approved  
+**Project**: NoiseChain
 
----
-
-## 1. 개요 (Overview)
-
-**NoiseChain**은 물리적 환경 노이즈(온도, 진동, EMI, 전력 변동)의 시간적 상관 구조를 양자 기반 서명으로 변환하여, **"특정 장비/제품이 특정 시간·환경을 실제로 경험했다"**를 증명하는 **물리적 신뢰 검증 네트워크(Physical Trust Verification Network)**입니다.
-
-### 1.1 핵심 철학
-
-| 원칙 | 설명 |
-|------|------|
-| **Noise is Resource** | 노이즈는 제거할 오류가 아닌, 복제 불가능한 보안 자원 |
-| **Physical Zero Trust** | 디지털 서명이 아닌 물리적 경험만이 원본성을 증명 |
-| **Time is the Key** | 동일한 노이즈 패턴은 절대 반복되지 않음 |
-
-### 1.2 한 줄 정의
-
-> *"디지털 서명이 아닌, 물리적 경험(시간·환경)의 영수증을 발급하는 체인."*
+[🇰🇷 Korean Version (한국어)](NoiseChain_Specification_ko.md)
 
 ---
 
-## 2. 목적 및 비전
+## 1. Overview
 
-### 2.1 핵심 목적
+**NoiseChain** is a **Physical Trust Verification Network** that transforms the chaotic temporal correlation structure of physical environmental noise (thermal, vibration, EMI, power fluctuations) into a quantum-proof cryptographic signature. It proves that **"a specific device actually experienced a specific environment at a specific time."**
 
-1. **물리적 진위 증명**: 데이터가 "변조되지 않았다"가 아니라, **현실에서 실제로 발생했음**을 증명
-2. **Oracle Problem 해결**: 블록체인의 입력 데이터 진위 문제를 물리적 노이즈로 극복
-3. **규제 대응 인프라**: EU Battery Pass, FDA DSCSA 등 물리적 추적 의무화 대응
-4. **산업별 증명 레시피**: 업종별 노이즈 프로파일을 자산화하여 네트워크 해자(Moat) 구축
+### 1.1 Core Philosophy
 
-### 2.2 비목표 (Non-Goals)
+| Principle | Description |
+|-----------|-------------|
+| **Noise is Resource** | Noise is not an error to be removed, but a non-replicable security resource. |
+| **Physical Zero Trust** | Only physical experience proves authenticity, not just digital keys. |
+| **Time is the Key** | Identical noise patterns never repeat in spacetime. |
 
-- 범용 L1 블록체인 구축이 아님
-- 100% 위조 불가능 보장이 아닌, **공격 비용 극대화** 및 **위험 점수(Risk Score)** 운영
-- 원본 센서 데이터 대규모 저장 (특징/스케치 기반 저장 원칙)
+### 1.2 One-Liner
 
----
-
-## 3. 대상 사용 사례
-
-| 산업 | 사용 사례 | 효과 |
-|------|----------|------|
-| **공급망** | 반도체/항공/국방 부품 이력 추적 | 위조 부품 즉시 탐지 |
-| **콜드체인** | 백신/바이오 소재 운송 조건 검증 | 온도 이탈 증명 |
-| **임상시험** | 실험실 데이터 현장 발생 증거화 | 데이터 조작 방지 |
-| **ESG** | 탄소배출/에너지 사용 실시간 인증 | 그린워싱 방지 |
-| **제약** | FDA DSCSA 준수 | 연간 $200B+ 위조약 피해 차단 |
+> *"A chain that issues receipts of physical experience (time & environment), not just digital signatures."*
 
 ---
 
-## 4. 핵심 개념
+## 2. Purpose & Vision
+
+### 2.1 Core Objectives
+
+1. **Physical Authenticity**: Proving data **actually happened in reality**, not just "tamper-evident".
+2. **Solving Oracle Problem**: Bridging the gap between physical reality and blockchain input using entropy.
+3. **Regulatory Infrastructure**: Compliance for EU Battery Pass, FDA DSCSA (Physical tracking mandates).
+4. **Proof Recipes**: Assetizing industry-specific noise profiles to build a network moat.
+
+### 2.2 Non-Goals
+
+- Not building a general-purpose L1 blockchain.
+- Not guaranteeing 100% unforgeability, but **maximizing attack cost** and using **Risk Scores**.
+- Not storing raw sensor data at scale (storing only sketches/features).
+
+---
+
+## 3. Target Use Cases
+
+| Industry | Use Case | Benefit |
+|----------|----------|---------|
+| **Supply Chain** | Semiconductor/Defense parts tracking | Immediate detection of counterfeit parts |
+| **Cold Chain** | Vaccine/Bio-material transport | Proof of continuous temperature conditions |
+| **Clinical Trials** | Lab data authenticity | Preventing data fabrication |
+| **ESG** | Real-time carbon/energy certification | Preventing Greenwashing |
+| **Pharma** | FDA DSCSA compliance | Blocking $200B+ annual counterfeit drugs |
+
+---
+
+## 4. Key Concepts
 
 ### 4.1 PoX (Proof-of-Experience)
 
-"이 장비가 **그 시간창 동안** 그 환경을 **실제로** 겪었다"를 증명하는 개념.  
-단일 센서 값이 아닌 **다중 센서의 상관 구조**로 구성.
+Proving that "this device **actually** experienced that environment **during that time window**."  
+Consists of **multi-sensor correlation structures**, not single sensor values.
 
-### 4.2 노이즈 지문 (Noise Fingerprint)
+### 4.2 Noise Fingerprint
 
-환경 노이즈는 시간과 공간에 따라 고유한 패턴 형성.  
-동일한 패턴은 물리적으로 재현 불가능 → 위조 불가능한 지문으로 활용.
+Environmental noise forms unique patterns across space and time.  
+Identical patterns are physically impossible to reproduce → Used as an unforgeable fingerprint.
 
-### 4.3 시간-노이즈 영수증 (Time-Noise Receipt)
+### 4.3 Time-Noise Receipt
 
-특정 시간창에서 수집된 노이즈를 해시화하여 생성되는 증명 토큰.  
-"언제, 어디서, 어떤 환경을 경험했는가"를 암호학적으로 증명.
+A proof token generated by hashing noise collected in a specific time window.  
+Cryptographically proves "When, Where, and What environment."
 
-### 4.4 상관 서명 (Correlation Signature)
+### 4.4 Correlation Signature
 
-온도/진동/전력/EMI/클럭 지터가 동시에 받는 환경 영향의 상관 구조를  
-**스케치(압축 특징)**로 만들어 서명하여 증거화.
+A **sketch (compressed feature)** representing the correlation structure of simultaneous impacts on Temperature, Vibration, Power, EMI, and Clock Jitter.
 
-### 4.5 Profile (증명 레시피)
+### 4.5 Profile (Proof Recipe)
 
-업종/규제/현장 조건마다 "어떤 센서/특징/임계값"이 적합한지 정의한 정책 묶음.  
-프로파일이 많아질수록 방어가 강해지고 전환 비용 상승 (네트워크 효과).
+A set of policies defining "which sensors/features/thresholds" are suitable for specific industries/regulations.  
+More profiles create a stronger network effect.
 
 ---
 
-## 5. 시스템 아키텍처
+## 5. System Architecture
 
-### 5.1 3계층 구조
+### 5.1 Layered Structure (MVP)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    [Layer 3] Verification Gateway           │
-│  • Fuzzy Verification (유사도 검증)                          │
-│  • Proof-of-Existence API (RESTful/gRPC)                    │
-│  • 규제 보고 자동화 (EU Battery Pass, FDA DSCSA)             │
+│  • Fuzzy Verification                                       │
+│  • Proof-of-Existence API (RESTful)                         │
+│  • Regulatory Reporting (EU Battery Pass, FDA DSCSA)        │
 └─────────────────────────────────────────────────────────────┘
                               ▲
                               │
 ┌─────────────────────────────────────────────────────────────┐
-│                    [Layer 2] TNQC Foundry Core              │
-│  • Noise-to-Quantum Mapping (노이즈→큐빗 위상 매핑)          │
-│  • Entropy Challenge (QRNG + 노이즈 혼합)                   │
-│  • Token Minting (PoXToken 발행)                            │
+│                    [Layer 2] Engine Core                    │
+│  • Correlation Signature Generation                         │
+│  • Token Minting (PoXToken)                                 │
+│  • Key Management (Ed25519)                                 │
 └─────────────────────────────────────────────────────────────┘
                               ▲
                               │
 ┌─────────────────────────────────────────────────────────────┐
 │                    [Layer 1] Edge Sensing                   │
-│  • Noise Mining (다중 센서 수집 또는 가상 노이즈 생성)         │
-│  • Time-Sync Quantization (나노초 동기화)                    │
-│  • Feature Extraction (특징 추출)                           │
+│  • Noise Mining (Multi-sensor or Virtual Simulation)        │
+│  • Time-Sync Quantization (NTP)                             │
+│  • Feature Extraction (Stats/Freq/Time)                     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 5.2 구성 요소
+### 5.2 Components
 
-| 컴포넌트 | 역할 |
-|----------|------|
-| **EdgeNode** | 센서 수집 (또는 가상 노이즈), 특징 추출, PoXToken 생성 |
-| **Gateway** | 집계, 캐시, 공동서명 (선택) |
-| **Verifier** | 검증 API, 위험 점수 산출 |
-| **Ledger** | Append-only 저장, 인덱스 |
-| **Profile Registry** | 증명 레시피/정책 저장소 |
+| Component | Role |
+|-----------|------|
+| **EdgeNode** | Sensor collection, Feature extraction, PoXToken generation |
+| **Verifier** | Validation (Schema, Sig, Time, Risk), Risk Score calculation |
+| **Repository** | Append-only storage (SQLite), Indexing |
+| **Orchestrator** | E2E Pipeline management |
 
 ---
 
-## 6. 주요 기능 요구사항
+## 6. Functional Requirements
 
-### 6.1 PoXToken 발급 (EdgeNode)
+### 6.1 PoXToken Minting (EdgeNode)
 
-1. 다중 센서 동시 수집 또는 **가상 노이즈 생성** (시뮬레이션 모드)
-2. NTP 기반 시간 동기화
-3. 전처리/정규화/결측 처리
-4. 특징 추출 (스펙트럼/시간/엔트로피/지터)
-5. 다중 라그 상관 구조 생성
-6. 검증자 Nonce 포함 (anti-replay)
-7. 해시체인 구성 (연속 토큰 변조 탐지)
-8. 디바이스 키로 서명
+1. Synchronous acquisition of multi-sensor data (or **Virtual Noise Generation**).
+2. NTP-based Time Synchronization.
+3. Preprocessing/Normalization.
+4. Feature Extraction (Spectral/Temporal/Entropy/Jitter).
+5. Multi-lag Correlation Structure generation.
+6. Cryptographic Signing (Ed25519).
 
-> **시뮬레이션 모드**: 실제 하드웨어 센서 없이 CPU 온도, OS 엔트로피, 합성 노이즈로 대체 가능
+> **Simulation Mode**: Can substitute real sensors with CPU Temp, OS Entropy, and Synthetic Noise.
 
-### 6.2 검증 (Verifier)
+### 6.2 Verification (Verifier)
 
-1. 스키마/버전/프로파일 적합성 검사
-2. 시간창/Nonce/리플레이/중복 제출 검사
-3. 서명/해시체인 무결성 검사
-4. 프로파일 기반 위험 점수 계산
-5. 결과 (accept/review/reject) + 영수증 발급
+1. Schema/Version/Profile validation.
+2. Time Window, Replay check.
+3. Signature Integrity check.
+4. Profile-based **Risk Score** calculation.
+5. Result (Pass/Fail/Warning) + Receipt generation.
 
 ### 6.3 Append-Only Ledger
 
-- **필수**: 변경 불가(append-only), 시간/장비/제품 키 조회, 감사 증빙 내보내기
-- **선택**: Merkle Root 생성, 퍼블릭 체인 앵커링
+- **Required**: Append-only, Lookup by Time/ID, Audit trails.
 
 ---
 
-## 7. 데이터 흐름
+## 7. Data Flow
 
 ```mermaid
 sequenceDiagram
-    participant Sensor as IoT/Edge Device
-    participant Core as TNQC Foundry
-    participant User as Verifier
+    participant Sensor as Edge Device
+    participant Engine as NoiseChain Engine
+    participant Verifier as External User
 
-    Sensor->>Sensor: 1. 환경 노이즈 수집 (열/진동/EMI)
-    Sensor->>Sensor: 2. 타임스탬프 결합 & 해싱
-    Sensor->>Core: 3. 노이즈 해시 전송
-    
-    Core->>Core: 4. 노이즈→큐빗 위상 매핑
-    Core->>Core: 5. 양자 시뮬레이션
-    Core->>Core: 6. 양자 좌표 추출 & 토큰 발행
-    Core-->>Sensor: 7. PoXToken 반환
+    Sensor->>Engine: 1. Collect Environmental Noise (Thermal/Vibration/Entropy)
+    Engine->>Engine: 2. Time Sync & Feature Extraction
+    Engine->>Engine: 3. Compute Correlation Signature
+    Engine->>Engine: 4. Quantization & Hashing
+    Engine->>Engine: 5. Create PoXToken & Sign (Ed25519)
+    Engine->>Verifier: 6. Return Signed Token
 
-    User->>Core: 8. 토큰 검증 요청
-    Core->>Core: 9. Fuzzy Matching & 유효성 검사
-    Core-->>User: 10. 검증 결과 (Valid/Invalid)
+    Verifier->>Engine: 7. Verify Token Request
+    Engine->>Engine: 8. Verify Sig, Time, Risk Score
+    Engine-->>Verifier: 9. Verification Report (Valid/Invalid)
 ```
 
 ---
 
-## 8. 기술 스택 (MVP)
+## 8. Tech Stack (MVP)
 
-| 영역 | 기술 | 설명 |
-|------|------|------|
-| **Language** | Python 3.11+ | 빠른 프로토타이핑, 방대한 생태계 |
-| **Core Libs** | numpy, scipy | 신호 처리, 특징 추출, 통계 연산 |
-| **Crypto** | PyNaCl (Ed25519) | 고속 서명/검증, DJB Curve25519 |
-| **Storage** | SQLite | Serverless 임베디드 DB, WAL 모드 |
-| **Time Sync** | ntplib | NTP 기반 시간 동기화 및 오차 보정 |
-| **Testing** | pytest | 단위/통합/E2E 테스트 자동화 |
-| **Future** | Rust (PQC) | 상용화 단계에서 성능/보안 강화용 도입 예정 |
-
----
-
-## 9. 보안 모델
-
-### 9.1 위협 분석
-
-| 위협 | 방어 메커니즘 |
-|------|--------------|
-| 리플레이 공격 | Nonce 기반 anti-replay |
-| 센서 스푸핑 | 다중 센서 상관 구조 검증 |
-| 시간 조작 | GPS PPS + 드리프트 탐지 |
-| 내부자 공격 | TPM/HSM 키 보호 + 로테이션 |
-| 데이터 변조 | 해시체인 + 서명 |
-
-### 9.2 판정 모델
-
-- **Accept**: 모든 검증 통과, 위험 점수 낮음
-- **Review**: 일부 이상 징후, 수동 검토 필요
-- **Reject**: 명확한 위조/변조 탐지
+| Area | Technology | Description |
+|------|------------|-------------|
+| **Language** | Python 3.11+ | Rapid prototyping, Ecosystem |
+| **Core Libs** | numpy, scipy | Signal processing, Stats |
+| **Crypto** | PyNaCl (Ed25519) | High-speed signing, DJB Curve25519 |
+| **Storage** | SQLite | Serverless embedded DB, WAL mode |
+| **Time Sync** | ntplib | NTP offset correction |
+| **Testing** | pytest | Unit/Integration/E2E automation |
+| **Future** | Rust (PQC) | For high-performance/security in production |
 
 ---
 
-## 10. 차별화 요소
+## 9. Security Model
 
-| 비교 항목 | 기존 솔루션 | NoiseChain |
-|-----------|-------------|------------|
-| 인증 기반 | 디지털 서명 | 물리적 노이즈 지문 |
-| 위조 가능성 | 키 탈취 시 위조 가능 | 물리적 복제 불가능 |
-| Oracle Problem | 해결 불가 | 물리 환경으로 해결 |
-| 양자 내성 | 별도 마이그레이션 필요 | 노이즈 기반 내재적 보유 |
-| 비용 구조 | 높은 인프라 비용 | 기존 센서 활용 |
+### 9.1 Threat Analysis
 
----
+| Threat | Mitigation Mechanism |
+|--------|----------------------|
+| Replay Attack | Timestamp window checks |
+| Sensor Spoofing | Multi-sensor correlation structure verification |
+| Time Manipulation | NTP Sync + Drift detection |
+| Key Compromise | Key Rotation |
+| Data Tampering | Ed25519 Signatures |
 
-## 11. 개발 로드맵
+### 9.2 Decision Model
 
-> **개발 환경**: 독립 연구 환경으로 실제 하드웨어 센서 없이 **시뮬레이션 기반** 개발 진행
-
-### Phase 1: MVP - 시뮬레이션 (0-3개월)
-
-- **가상 센서 드라이버**: CPU 온도, OS 엔트로피(/dev/urandom), 합성 노이즈
-- EdgeNode PoXToken v1 발급 (시뮬레이션 노이즈 기반)
-- Verifier 검증 + Receipt 발급
-- Append-only 저장 + 기본 조회
-- Profile v1 1개 (시뮬레이션 검증용)
-- **KPI**: 알고리즘 검증, 리플레이 공격 탐지 시연, 위조 탐지 데모
-
-### Phase 2: 파일럿 - 하드웨어 연동 (3-9개월)
-
-- 파트너사 하드웨어 센서 연동 (온도, 진동, EMI, 전력)
-- PTP 정밀 시간 동기화
-- FFT 기반 주파수 특징 추출
-- 분산 저장소 + 합의
-- EU Battery Pass / FDA DSCSA 모듈
-
-### Phase 3: 상용화 (9-18개월)
-
-- P2P 네트워크 완전 구현
-- 웹훅 / 대시보드 / 분석 도구
-- SaaS 구독 모델 출시
-- 글로벌 파트너십 확대
+- **Accept**: All checks passed, Low Risk Score.
+- **Review**: Borderline scores, requires manual audit.
+- **Reject**: Invalid signature, Future timestamp, High Risk Score.
 
 ---
 
-## 12. 비즈니스 모델
+## 10. Differentiation
 
-| 모델 | 가격 | 대상 |
-|------|------|------|
-| 노드 SaaS | $500/노드/월 | 제조업체, 물류사 |
-| 검증 API | $0.001-0.01/호출 | 소매업체, 소비자 |
-| 인증 수수료 | $0.01-1.00/제품 | 고가품 (제약, 반도체) |
-| 규제 모듈 | 연간 $50K+ | 대기업 |
-| Profile 라이선스 | 맞춤형 | 업종별 레시피 자산화 |
-
----
-
-## 13. 리스크 및 완화책
-
-| 리스크 | 확률 | 영향 | 완화책 |
-|--------|------|------|--------|
-| 센서 위조 | 중 | 높 | 다중 센서 상관 분석, AI 이상 탐지 |
-| QPU 가용성 | 중 | 중 | NISO 시뮬레이터 + 하이브리드 |
-| 규제 변경 | 낮 | 높 | 표준 기구 참여, 오픈소스 전략 |
-| 네트워크 효과 실패 | 중 | 높 | 초기 대형 파트너 독점 계약 |
+| Feature | Traditional Solution | NoiseChain |
+|---------|----------------------|------------|
+| **Basis** | Digital Keys | Physical Noise Fingerprint |
+| **Forgeability** | Vulnerable if key stolen | Physically non-replicable |
+| **Oracle Problem** | Unsolved | Solved by physical entropy |
+| **Post-Quantum** | Migration needed | Inherently resistant (Entropy) |
+| **Cost** | High infrastructure | Uses existing sensors |
 
 ---
 
-## 14. 관련 규제 및 표준
+## 11. Roadmap
 
-- **EU**: Battery Pass (2027), Ecodesign for Sustainable Products
-- **US**: FDA DSCSA, NIST PQC
-- **국제**: GS1 Digital Link, ISO 15459 (UID)
+> **Current Status**: MVP (Simulation) Completed.
 
----
+### Phase 1: MVP - Simulation (Completed)
 
-## 15. 시뮬레이션 환경 구성
+- **Virtual Sensors**: CPU Temp, OS Entropy, Synthetic Noise.
+- EdgeNode PoXToken v1 Minting.
+- Verifier Engine & Risk Scoring.
+- SQLite Storage.
+- CLI Demo & E2E Pipeline.
+- **Outcome**: 258 Tests Passed, Working Demo.
 
-### 가상 센서 대체 매핑
+### Phase 2: Pilot - Hardware Integration (Next)
 
-| 실제 센서 | 시뮬레이션 대체 |
-|----------|----------------|
-| 온도 센서 | CPU/GPU 온도 (psutil) |
-| 진동 센서 | 마이크 화이트노이즈 또는 합성 패턴 |
-| EMI 센서 | CPU 클럭 지터, 메모리 타이밍 |
-| 전력 노이즈 | numpy.random 기반 합성 |
-| 클럭 지터 | time.perf_counter_ns() 변동 |
+- Hardware Sensor integration (MEMS, Thermistors).
+- PTP Precision Time Sync.
+- Distributed Validator Nodes.
+- Regulatory Modules (EU Batt/FDA).
 
-### 시뮬레이션으로 검증 가능한 항목
+### Phase 3: Commercialization
 
-- ✅ 특징 추출 알고리즘 (통계/주파수/시간)
-- ✅ 상관 서명 생성 및 검증
-- ✅ PoXToken 발급/검증 파이프라인
-- ✅ 해시 체인 무결성
-- ✅ 리플레이 공격 탐지
-- ✅ RiskScore 기반 판정
+- P2P Network.
+- SaaS / Dashboard.
+- Global Partnerships.
 
 ---
 
-## 16. Open Questions
+## 12. Business Model
 
-1. ~~PoXToken v1 스키마의 구체 규격~~ → **완료**: 199 bytes 고정 크기 바이너리 (NoiseFingerprint 99 bytes + 메타데이터 + 서명)
-2. ~~Correlation Signature 알고리즘~~ → **완료**: 다중 센서 교차 상관 + MinMax 정규화 + SHA3-256
-3. ~~Time Sync 수준~~ → **완료**: NTP 기반 오차 보정 (허용 오차 1초)
-4. Profile 거버넌스/권한 모델 (추후 과제)
-5. ~~1차 파일럿 산업 선택~~ → 시뮬레이션 MVP 우선
+| Model | Pricing | Target |
+|-------|---------|--------|
+| Node SaaS | $500/node/mo | Manufacturers, Logistics |
+| API | Tiered / call | Retailers, Consumers |
+| Certification | Per unit | High-value (Pharma, Chips) |
+| Enterprise | Annual License | Large Corps (Regulation) |
 
 ---
 
-## 부록: 구현된 데이터 구조
+## 13. Regulations & Standards
+
+- **EU**: Battery Pass (2027), Ecodesign.
+- **US**: FDA DSCSA, NIST PQC.
+- **Global**: GS1 Digital Link, ISO 15459 (UID).
+
+---
+
+## 14. Simulation Environment (MVP)
+
+### Virtual Sensor Mapping
+
+| Real Sensor | Simulation Mapping |
+|-------------|--------------------|
+| Temperature | CPU/GPU Temperature (or synthetic sine wave) |
+| Vibration | White noise or synthetic patterns |
+| EMI | CPU Clock Jitter, Memory timing |
+| Power | Random walk / Gaussian noise |
+
+### Validated Items
+
+- ✅ Feature Extraction (Stats/Freq/Time)
+- ✅ Correlation Signature Generation
+- ✅ PoXToken Minting/Verification Pipeline
+- ✅ Risk Score Assessment
+
+---
+
+## 15. Open Questions (Status)
+
+1. **PoXToken v1 Schema** → **RESOLVED**: 199-byte fixed binary (Fingerprint + Metadata + Sig).
+2. **Correlation Algo** → **RESOLVED**: Cross-correlation + MinMax + SHA3-256.
+3. **Time Sync** → **RESOLVED**: NTP-based offset correction (1s tolerance).
+4. **Governance** → To be defined in Phase 3.
+
+---
+
+## Appendix: Implemented Data Structures
 
 ### PoXToken (v0.1.0)
 
