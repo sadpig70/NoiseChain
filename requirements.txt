@@ -1,0 +1,14 @@
+# NoiseChain MVP 의존성
+# 설치: pip install -r requirements.txt
+
+# 핵심 의존성
+numpy>=1.24.0           # 수치 계산, 배열 연산
+scipy>=1.10.0           # 신호 처리 (상관 계산)
+psutil>=5.9.0           # 시스템 모니터링 (CPU 온도)
+pynacl>=1.5.0           # Ed25519 서명 (libsodium)
+
+# 개발 의존성 (선택)
+pytest>=7.0.0           # 테스트 프레임워크
+pytest-cov>=4.0.0       # 커버리지 측정
+mypy>=1.0.0             # 타입 검사
+ruff>=0.1.0             # 린터/포매터
