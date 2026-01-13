@@ -1,40 +1,42 @@
 # Contributing to NoiseChain
 
-NoiseChain 프로젝트에 기여해 주셔서 감사합니다!
+Thank you for your interest in contributing to the NoiseChain project!
 
-## 개발 환경 설정
+[🇰🇷 Korean Version (한국어)](CONTRIBUTING_ko.md)
+
+## Development Setup
 
 ```bash
-# 저장소 클론
+# Clone repository
 git clone https://github.com/sadpig70/NoiseChain.git
 cd NoiseChain
 
-# 가상 환경 생성
+# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# 개발 의존성 설치
+# Install development dependencies
 pip install -e ".[dev]"
 
-# 테스트 실행
+# Run tests
 pytest
 ```
 
-## 코드 스타일
+## Code Style
 
 - **Formatter**: Ruff
 - **Type Checker**: mypy
-- **Line Length**: 100자
+- **Line Length**: 100 characters
 
 ```bash
-# 코드 검사
+# Lint code
 ruff check src/
 
-# 타입 검사
+# Check types
 mypy src/noisechain/
 ```
 
-## 커밋 메시지 규칙
+## Commit Convention
 
 ```
 <type>: <subject>
@@ -44,14 +46,14 @@ mypy src/noisechain/
 
 ### Type
 
-- `feat`: 새 기능
-- `fix`: 버그 수정
-- `docs`: 문서 변경
-- `test`: 테스트 추가/수정
-- `refactor`: 리팩토링
-- `chore`: 빌드, 설정 변경
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `test`: Adding or updating tests
+- `refactor`: Code refactoring
+- `chore`: Build tasks, configuration changes
 
-### 예시
+### Example
 
 ```
 feat: Add correlation signature verification
@@ -61,14 +63,14 @@ feat: Add correlation signature verification
 - Update tests
 ```
 
-## Pull Request 절차
+## Pull Request Process
 
-1. Fork 후 feature 브랜치 생성
-2. 변경 사항 커밋
-3. 테스트 통과 확인 (`pytest`)
-4. PR 생성
+1. Fork the repository and create a feature branch.
+2. Commit your changes following the convention.
+3. Verify that all tests pass (`pytest`).
+4. Create a Pull Request (PR).
 
-## 문의
+## Contact
 
 - 📧 <sadpig70@gmail.com>
 - 🔗 [GitHub Issues](https://github.com/sadpig70/NoiseChain/issues)

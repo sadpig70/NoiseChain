@@ -1,44 +1,45 @@
 # NoiseChain MVP
 
-**물리적 경험증명(PoX) 기반 신뢰 검증 네트워크**
+**Physical Trust Verification Network based on Proof-of-Experience (PoX)**
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-258%20passed-brightgreen.svg)](#테스트)
+[![Tests](https://img.shields.io/badge/tests-258%20passed-brightgreen.svg)](#tests)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ![NoiseChain Infographic](docs/noisechain_infographic.png)
 
-## 개요
+## Overview
 
-NoiseChain은 물리적 환경 노이즈(온도, 진동, EMI, 전력 변동)의 시간적 상관 구조를 서명으로 변환하여,
-**"특정 장비가 특정 시간·환경을 실제로 경험했다"**를 증명하는 Physical Trust Verification Network입니다.
+NoiseChain is a **Physical Trust Verification Network** that transforms the temporal correlation structure of physical environmental noise (temperature, vibration, EMI, power fluctuations) into a cryptographic signature. It proves that **"a specific device actually experienced a specific environment at a specific time."**
 
-## 빠른 시작
+[🇰🇷 Korean Version (한국어)](README_ko.md)
+
+## Quick Start
 
 ```bash
-# 의존성 설치
+# Install dependencies
 pip install -r requirements.txt
 
-# 개발 모드 설치
+# Install in development mode
 pip install -e .
 
-# 테스트 실행
+# Run tests
 pytest
 
-# 데모 실행
+# Run demo
 python -m noisechain.demo demo
 ```
 
-## 사용법
+## Usage
 
 ### Python API
 
 ```python
 from noisechain import NoiseChainPipeline
 
-# 파이프라인 생성
+# Create pipeline
 with NoiseChainPipeline() as pipeline:
-    # 센서 데이터 → 토큰 생성 → 서명 → 저장 → 검증
+    # Collect sensor data -> Generate Token -> Sign -> Store -> Verify
     result = pipeline.generate_and_store()
     
     print(f"Success: {result.success}")
@@ -46,20 +47,20 @@ with NoiseChainPipeline() as pipeline:
     print(f"Valid: {result.verification.is_valid}")
 ```
 
-### CLI 데모
+### CLI Demo
 
 ```bash
-# 전체 데모
+# Run full demo
 python -m noisechain.demo demo
 
-# 토큰 생성
+# Generate token
 python -m noisechain.demo generate --samples 256
 
-# 성능 벤치마크
+# Run benchmark
 python -m noisechain.demo benchmark --iterations 10
 ```
 
-## 아키텍처
+## Architecture
 
 ```
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
@@ -74,57 +75,57 @@ python -m noisechain.demo benchmark --iterations 10
 └─────────────┘    └─────────────┘    └─────────────┘
 ```
 
-## 프로젝트 구조
+## Project Structure
 
 ```
 NoiseChain/
 ├── src/noisechain/
-│   ├── models/          # 데이터 모델 (Sample, TimeSeries)
-│   ├── sensors/         # 가상 센서 드라이버 (4종)
-│   ├── time/            # NTP 시간 동기화
-│   ├── pipeline/        # 특징 추출 & 상관 서명
-│   ├── token/           # PoXToken 스키마 (199 bytes)
-│   ├── crypto/          # Ed25519 키 관리 & 서명
-│   ├── storage/         # SQLite 토큰 저장소
-│   ├── verification/    # 4단계 검증 엔진
-│   ├── engine.py        # E2E 파이프라인
-│   └── demo.py          # CLI 데모
-├── tests/               # 258개 테스트 케이스
-├── docs/                # 설계 문서
-├── pyproject.toml       # 프로젝트 설정
-└── requirements.txt     # 의존성
+│   ├── models/          # Data Models (Sample, TimeSeries)
+│   ├── sensors/         # Virtual Sensor Drivers (4 types)
+│   ├── time/            # NTP Time Synchronization
+│   ├── pipeline/        # Feature Extraction & Correlation Signature
+│   ├── token/           # PoXToken Schema (199 bytes)
+│   ├── crypto/          # Ed25519 Key Management & Signing
+│   ├── storage/         # SQLite Token Repository
+│   ├── verification/    # 4-Stage Verification Engine
+│   ├── engine.py        # E2E Pipeline
+│   └── demo.py          # CLI Demo
+├── tests/               # 258 Test Cases
+├── docs/                # Design Documents
+├── pyproject.toml       # Project Configuration
+└── requirements.txt     # Dependencies
 ```
 
-## 핵심 개념
+## Key Concepts
 
-| 개념 | 설명 |
-|------|------|
-| **PoX Token** | 물리적 경험 증명 토큰 (199 bytes) |
-| **Noise Fingerprint** | 복제 불가능한 노이즈 지문 (99 bytes) |
-| **Correlation Signature** | 다중 센서 상관 구조 서명 (SHA3-256) |
-| **Risk Score** | 0-100% 위험 점수 기반 판정 |
+| Concept | Description |
+|---------|-------------|
+| **PoX Token** | Proof-of-Experience Token (199 bytes) |
+| **Noise Fingerprint** | Non-replicable noise fingerprint (99 bytes) |
+| **Correlation Signature** | Multi-sensor correlation structure signature (SHA3-256) |
+| **Risk Score** | 0-100% Risk-based judgment |
 
-## 검증 파이프라인
+## Verification Pipeline
 
 ```
-1. Schema Validation    ─▶ 필드 크기, 범위 검증
-2. Signature Verify     ─▶ Ed25519 서명 검증
-3. Timestamp Check      ─▶ 미래/수명 초과 검사
-4. Risk Score Assess    ─▶ 임계값 비교
+1. Schema Validation    ─▶ Verify field size and ranges
+2. Signature Verify     ─▶ Verify Ed25519 signature
+3. Timestamp Check      ─▶ Check for future/expired timestamps
+4. Risk Score Assess    ─▶ Compare against threshold
 ```
 
-## 테스트
+## Tests
 
 ```bash
-# 전체 테스트
+# Run all tests
 pytest
 
-# 커버리지 리포트
+# Coverage report
 pytest --cov=noisechain --cov-report=html
 ```
 
-| 모듈 | 테스트 수 |
-|------|----------|
+| Module | Test Cases |
+|--------|------------|
 | models | 28 |
 | sensors | 42 |
 | time | 25 |
@@ -137,13 +138,13 @@ pytest --cov=noisechain --cov-report=html
 | pipeline | 18 |
 | **Total** | **258** |
 
-## 성능
+## Performance
 
-- **토큰 생성**: ~10ms (256 샘플)
-- **토큰 크기**: 199 bytes (서명 포함)
-- **처리량**: ~100 tokens/sec
+- **Token Generation**: ~10ms (256 samples)
+- **Token Size**: 199 bytes (including signature)
+- **Throughput**: ~100 tokens/sec
 
-## 의존성
+## Dependencies
 
 - Python 3.11+
 - numpy
@@ -151,11 +152,11 @@ pytest --cov=noisechain --cov-report=html
 - pynacl (Ed25519)
 - ntplib
 
-## 라이선스
+## License
 
 MIT License
 
-## 저자
+## Author
 
 **Jung Wook Yang**  
 📧 <sadpig70@gmail.com>  
