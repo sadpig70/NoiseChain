@@ -178,20 +178,17 @@ sequenceDiagram
 
 ---
 
-## 8. 기술 스택
+## 8. 기술 스택 (MVP)
 
-| 영역 | 기술 | 선택 이유 |
-|------|------|-----------|
-| **Core Language** | Rust | 성능, 메모리 안전성, 임베디드 호환 |
-| **Async Runtime** | Tokio | 고성능 비동기 I/O |
-| **Local DB** | SQLite + rusqlite | 경량, 임베디드, 신뢰성 |
-| **Distributed Store** | TimescaleDB | 시계열 로그 저장 |
-| **HTTP Server** | Axum | Rust 생태계 통합 |
-| **Serialization** | Serde + CBOR | 바이너리 효율 |
-| **Crypto** | ring / ed25519-dalek | 고속, 검증된 보안 |
-| **PQC** | Kyber/Dilithium | 양자 내성 암호 (미래 대비) |
-| **P2P** | libp2p-rust | 표준화된 P2P 스택 |
-| **Quantum** | Prophet Simulator + NISO | 자체 개발 양자 시뮬레이터 |
+| 영역 | 기술 | 설명 |
+|------|------|------|
+| **Language** | Python 3.11+ | 빠른 프로토타이핑, 방대한 생태계 |
+| **Core Libs** | numpy, scipy | 신호 처리, 특징 추출, 통계 연산 |
+| **Crypto** | PyNaCl (Ed25519) | 고속 서명/검증, DJB Curve25519 |
+| **Storage** | SQLite | Serverless 임베디드 DB, WAL 모드 |
+| **Time Sync** | ntplib | NTP 기반 시간 동기화 및 오차 보정 |
+| **Testing** | pytest | 단위/통합/E2E 테스트 자동화 |
+| **Future** | Rust (PQC) | 상용화 단계에서 성능/보안 강화용 도입 예정 |
 
 ---
 
@@ -313,33 +310,63 @@ sequenceDiagram
 
 ## 16. Open Questions
 
-1. PoXToken v1 스키마의 구체 규격 (필드/바이트/서명 방식)
-2. Correlation Signature 알고리즘 (라그 범위/양자화/강인성)
-3. Time Sync 수준 (NTP/PTP 요구, drift_budget 초기값)
-4. Profile 거버넌스/권한 모델
+1. ~~PoXToken v1 스키마의 구체 규격~~ → **완료**: 199 bytes 고정 크기 바이너리 (NoiseFingerprint 99 bytes + 메타데이터 + 서명)
+2. ~~Correlation Signature 알고리즘~~ → **완료**: 다중 센서 교차 상관 + MinMax 정규화 + SHA3-256
+3. ~~Time Sync 수준~~ → **완료**: NTP 기반 오차 보정 (허용 오차 1초)
+4. Profile 거버넌스/권한 모델 (추후 과제)
 5. ~~1차 파일럿 산업 선택~~ → 시뮬레이션 MVP 우선
 
 ---
 
-## 부록: 영수증 구조 예시
+## 부록: 구현된 데이터 구조
+
+### PoXToken (v0.1.0)
 
 ```json
 {
-  "receipt_id": "0x8f3e...",
-  "timestamp": "2026-01-13T14:23:11.123456789Z",
-  "device_id": "sensor_A_0x4a2c",
-  "noise_signature": "sha3-256:0x9c7f...",
-  "quantum_proof": "zk-snark:0x3b8a...",
-  "metadata": {
-    "location": "lat:37.123, lng:127.456",
-    "environment": {
-      "temp": 23.1,
-      "vibration_g": 0.2,
-      "em_freq_mhz": 2450
-    },
-    "challenge_id": "qrng_0x7d1e"
+  "version": 1,
+  "node_id": "04a1... (16 bytes)",
+  "timestamp_ns": 1705123456789000000,
+  "fingerprint": {
+    "feature_vector": "base64...",
+    "correlation_hash": "sha3-256...",
+    "sensor_count": 4,
+    "sample_count": 256
   },
-  "verification_status": "confirmed_by_7_nodes"
+  "risk_score": 15.5,
+  "signature": "ed25519_sig..."
+}
+```
+
+### Verification Report
+
+```json
+{
+  "token_hash": "a1b2...",
+  "is_valid": true,
+  "timestamp": "2026-01-13T19:30:00",
+  "steps": [
+    {
+      "name": "schema",
+      "status": "PASSED",
+      "message": "Valid PoXToken v1"
+    },
+    {
+      "name": "signature",
+      "status": "PASSED",
+      "message": "Ed25519 signature verified"
+    },
+    {
+      "name": "timestamp",
+      "status": "PASSED",
+      "message": "Age: 0.1s"
+    },
+    {
+      "name": "risk_score",
+      "status": "PASSED",
+      "message": "Score 15.5 (Threshold: 80.0)"
+    }
+  ]
 }
 ```
 
