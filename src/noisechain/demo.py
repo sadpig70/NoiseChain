@@ -159,14 +159,35 @@ def cmd_benchmark(args):
     std = np.std(times_ms)
     min_t = np.min(times_ms)
     max_t = np.max(times_ms)
+    throughput = 1000/avg if avg > 0 else 0
+    
+    # 결과 요약
+    results = {
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "config": {"iterations": args.iterations, "samples": args.samples},
+        "stats": {
+            "mean_ms": float(avg),
+            "std_ms": float(std),
+            "min_ms": float(min_t),
+            "max_ms": float(max_t),
+            "throughput_tps": float(throughput)
+        }
+    }
     
     print(f"📊 벤치마크 결과:")
     print(f"   평균: {avg:.2f}ms")
     print(f"   표준편차: {std:.2f}ms")
     print(f"   최소: {min_t:.2f}ms")
     print(f"   최대: {max_t:.2f}ms")
-    print(f"   처리량: {1000/avg:.1f} tokens/sec")
+    print(f"   처리량: {throughput:.1f} tokens/sec")
     
+    # 파일 저장
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(results, f, indent=2)
+        print(f"\n💾 결과 저장 완료: {args.output}")
+        
     return 0
 
 
@@ -259,6 +280,10 @@ def main():
         type=int, 
         default=256, 
         help="샘플 수"
+    )
+    bench_parser.add_argument(
+        "--output", 
+        help="결과 저장 파일 경로 (JSON)"
     )
     
     # demo 명령
